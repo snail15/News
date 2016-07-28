@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">News</string>
+    <string name="intro">Enter Your Keyword, and We Will Search News for You</string>
+    <string name="search">Search</string>
+</resources>
