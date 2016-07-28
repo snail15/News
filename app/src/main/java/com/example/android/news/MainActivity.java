@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(searchViewIntent);
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "You don't have internet!!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.noConnectionToast,Toast.LENGTH_SHORT).show();
                 }
             }
         });
