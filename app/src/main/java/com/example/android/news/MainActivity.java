@@ -11,32 +11,43 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class MainActivity extends AppCompatActivity {
 
     private static String mKeyword;
+    private EditText keywordEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        final ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+//        final NetworkInfo networkInfo = cm.getNetworkInfo();
 
-        TextView searchView = (TextView)findViewById(R.id.search_click);
+
+        final TextView searchView = (TextView)findViewById(R.id.search_click);
+        keywordEdit = (EditText)findViewById(R.id.keyword_input);
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = cm.getNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
-                    EditText keywordView = (EditText)findViewById(R.id.keyword_input);
-                    mKeyword = keywordView.getText().toString();
+
+                //if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
+
+                try {
+                    mKeyword = URLEncoder.encode(keywordEdit.getText().toString(),"UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                     Intent searchViewIntent = new Intent(MainActivity.this, NewsListingActivity.class);
                     startActivity(searchViewIntent);
-                }
-                else{
-                    Toast.makeText(MainActivity.this, R.string.noConnectionToast,Toast.LENGTH_SHORT).show();
-                }
+               // }
+                //else{
+                //    Toast.makeText(MainActivity.this, R.string.noConnectionToast,Toast.LENGTH_SHORT).show();
+                //}
             }
         });
 

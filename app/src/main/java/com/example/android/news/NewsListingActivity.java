@@ -1,13 +1,16 @@
 package com.example.android.news;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,23 +18,30 @@ import java.util.List;
 public class NewsListingActivity extends AppCompatActivity implements android.app.LoaderManager.LoaderCallbacks<List<News>>{
 
     private NewsAdapter mAdapter;
+    private TextView mEmptyTextView;
+    private Vibrator mVibrator;
     private static final int NEWS_LOADER_ID = 1;
     public static final String LOG_TAG = NewsListingActivity.class.getName();
-    public static final String QUERY_URL = "http://content.guardianapis.com/search?q="+MainActivity.getKeyword()+"&api-key=test";
+    public static final String QUERY_URL = "http://content.guardianapis.com/search?q=";
+    public static final String API_KEY = "&api-key=test";
+    public static String loaderURL;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_listing);
+
+        mEmptyTextView = (TextView)findViewById(R.id.empty_view);
+        mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        loaderURL = QUERY_URL+MainActivity.getKeyword()+API_KEY;
 
         android.app.LoaderManager loaderManager = getLoaderManager();
 
         loaderManager.initLoader(NEWS_LOADER_ID, null, this);
 
         ListView listView = (ListView) findViewById(R.id.list);
-
-
         mAdapter = new NewsAdapter(this, new ArrayList<News>());
         listView.setAdapter(mAdapter);
+        listView.setEmptyView(mEmptyTextView);
 
         //Takes the user to the Guardian website
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,12 +66,15 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
 
     @Override
     public android.content.Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
-        return new NewsLoader(this,QUERY_URL);
+        return new NewsLoader(this,loaderURL);
     }
 
     @Override
     public void onLoadFinished(android.content.Loader<List<News>> loader, List<News> newses) {
         mAdapter.clear();
+        mEmptyTextView.setText(R.string.no_result);
+        //vibrate when finish loading!!
+        mVibrator.vibrate(500);
         if (newses != null && !newses.isEmpty()){
             mAdapter.addAll(newses);
         }

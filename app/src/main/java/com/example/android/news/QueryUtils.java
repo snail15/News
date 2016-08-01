@@ -89,7 +89,7 @@ public final class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the news JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -101,10 +101,7 @@ public final class QueryUtils {
         return jsonResponse;
     }
 
-    /**
-     * Convert the {@link InputStream} into a String which contains the
-     * whole JSON response from the server.
-     */
+
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
@@ -127,41 +124,80 @@ public final class QueryUtils {
         try {
 
             JSONObject root = new JSONObject(JsonResponse);
-            JSONArray featuresArray = root.getJSONArray("features");
+            JSONObject responseObject = root.getJSONObject("response");
+            JSONArray resultsArray = responseObject.getJSONArray("results");
 
-            for (int i = 0; i < featuresArray.length(); i++) {
-                JSONObject earthquakeJSON = featuresArray.getJSONObject(i);
-                JSONObject propertiesJSON = earthquakeJSON.getJSONObject("properties");
-                double magnitude = propertiesJSON.getDouble("mag");
-                DecimalFormat formatter = new DecimalFormat("0.0");
-                String magnitudeString = formatter.format(magnitude);
-                String location = propertiesJSON.getString("place");
-                String relativeLocation = "";
-                String mainLocation = "";
-                if (location.contains("km") && location.contains("of")) {
-                    int index = location.indexOf("of");
-                    relativeLocation = location.substring(0, index + 2);
-                    mainLocation = location.substring(index + 3, location.length());
-                } else {
-                    relativeLocation = "Near the";
-                    mainLocation = location;
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject newsJSON = resultsArray.getJSONObject(i);
+                String newsTitle = newsJSON.getString("webTitle");
+                String newsSection = newsJSON.getString("sectionName");
+                String newsDate = newsJSON.getString("webPublicationDate");
+                String formattedDate = "";
+                if (newsDate.contains("T")) {
+                    int index = newsDate.indexOf("T");
+                    formattedDate = newsDate.substring(0, index);
                 }
-                long time = propertiesJSON.getLong("time");
+                String displayDate = makeDisplayDate(formattedDate);
 
-                String url = propertiesJSON.getString("url");
+                String url = newsJSON.getString("webUrl");
 
-                newses.add(new News(magnitude, relativeLocation, mainLocation, time, url));
+                newses.add(new News(newsTitle,newsSection,displayDate,url));
             }
 
 
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+
+            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
 
-        // Return the list of earthquakes
         return newses;
     }
+
+    private static String makeDisplayDate (String date){
+        String[] strings = date.split("-");
+        String month = "";
+        String finalString ="";
+        switch (strings[1]) {
+            case "01":
+                month = "Jan";
+                break;
+            case "02":
+                month = "Feb";
+                break;
+            case "03":
+                month = "Mar";
+                break;
+            case "04":
+                month = "Apr";
+                break;
+            case "05":
+                month = "May";
+                break;
+            case "06":
+                month = "Jun";
+                break;
+            case "07":
+                month = "Jul";
+                break;
+            case "08":
+                month = "Aug";
+                break;
+            case "09":
+                month = "Sep";
+                break;
+            case "10":
+                month = "Oct";
+                break;
+            case "11":
+                month = "Nov";
+                break;
+            case "12":
+                month = "Dec";
+                break;
+        }
+        finalString = month+", "+strings[2]+" "+strings[0];
+        return finalString;
+
+    }
+
 }
