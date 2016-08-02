@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
     private NewsAdapter mAdapter;
     private TextView mEmptyTextView;
     private Vibrator mVibrator;
+    private RecyclerView mRecyclerView;
     private static final int NEWS_LOADER_ID = 1;
     public static final String LOG_TAG = NewsListingActivity.class.getName();
     public static final String QUERY_URL = "http://content.guardianapis.com/search?show-tags=contributor&q=";
@@ -37,25 +40,26 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
         android.app.LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(NEWS_LOADER_ID, null, this);
 
-        ListView listView = (ListView) findViewById(R.id.list);
-        mAdapter = new NewsAdapter(this, new ArrayList<News>());
-        listView.setAdapter(mAdapter);
-        listView.setEmptyView(mEmptyTextView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+//        mRecyclerView.setEmptyView(mEmptyTextView);
 
         //Takes the user to the Guardian website
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Find the current earthquake that was clicked on
-                News currentNews = mAdapter.getItem(position);
-                // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri newsUri = Uri.parse(currentNews.getUrl());
-                // Create a new intent to view the earthquake URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
-            }
-        });
+//        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                // Find the current earthquake that was clicked on
+//                News currentNews = mAdapter.getItem(position);
+//                // Convert the String URL into a URI object (to pass into the Intent constructor)
+//                Uri newsUri = Uri.parse(currentNews.getUrl());
+//                // Create a new intent to view the earthquake URI
+//                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
+//                // Send the intent to launch a new activity
+//                startActivity(websiteIntent);
+//            }
+//        });
 
     }
     @Override
@@ -65,17 +69,18 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
 
     @Override
     public void onLoadFinished(android.content.Loader<List<News>> loader, List<News> newses) {
-        mAdapter.clear();
-        mEmptyTextView.setText(R.string.no_result);
+//        mEmptyTextView.setText(R.string.no_result);
         //vibrate when finish loading!!
         mVibrator.vibrate(500);
         if (newses != null && !newses.isEmpty()){
-            mAdapter.addAll(newses);
+            mAdapter = new NewsAdapter(newses,this);
+            mRecyclerView.setAdapter(mAdapter);
+
         }
     }
 
     @Override
     public void onLoaderReset(android.content.Loader<List<News>> loader) {
-        mAdapter.clear();
+        mAdapter = null;
     }
 }
