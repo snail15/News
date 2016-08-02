@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
                     Intent searchViewIntent = new Intent(MainActivity.this, NewsListingActivity.class);
                     startActivity(searchViewIntent);
                } else{

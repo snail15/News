@@ -22,8 +22,6 @@
               android:paddingRight="16dp"
               android:paddingStart="16dp">
 
-
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -74,6 +72,15 @@
             android:textSize="12sp"
             tools:text="Mar 6, 2010" />
 
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textColor="@color/newsTitle"
+            android:textSize="12sp"
+            android:paddingTop="8dp"
+            tools:text="John Doe" />
 
     </LinearLayout>
 </LinearLayout>

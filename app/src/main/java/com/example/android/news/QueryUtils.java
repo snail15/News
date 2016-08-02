@@ -133,16 +133,20 @@ public final class QueryUtils {
                 String displayDate = makeDisplayDate(formattedDate);
 
                 String url = newsJSON.getString("webUrl");
+                String authorName = null;
+                try {
+                    JSONArray tagsArray = newsJSON.getJSONArray("tags");
+                    JSONObject tagsObject = tagsArray.getJSONObject(0);
+                    authorName = tagsObject.getString("webTitle");
+                    newses.add(new News(newsTitle,newsSection,displayDate,url,authorName));
+                } catch (JSONException e){
+                    newses.add(new News(newsTitle,newsSection,displayDate,url));
+                }
 
-                newses.add(new News(newsTitle,newsSection,displayDate,url));
             }
-
-
         } catch (JSONException e) {
-
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
-
         return newses;
     }
 
