@@ -14,15 +14,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsListingActivity extends AppCompatActivity implements android.app.LoaderManager.LoaderCallbacks<List<News>>{
+public class NewsListingActivity extends AppCompatActivity implements android.app.LoaderManager.LoaderCallbacks<List<News>>, NewsAdapter.ItemClickCallback{
 
     private NewsAdapter mAdapter;
     private TextView mEmptyTextView;
     private Vibrator mVibrator;
     private RecyclerView mRecyclerView;
+    private List<News> mNewses;
     private static final int NEWS_LOADER_ID = 1;
     public static final String LOG_TAG = NewsListingActivity.class.getName();
     public static final String QUERY_URL = "http://content.guardianapis.com/search?show-tags=contributor&q=";
@@ -54,7 +56,9 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
         //vibrate when finish loading!!
         mVibrator.vibrate(500);
         if (newses != null && !newses.isEmpty()){
+            mNewses = newses;
             mAdapter = new NewsAdapter(newses,this);
+            mAdapter.setItemClickCallback(this);
             mRecyclerView.setAdapter(mAdapter);
         }
     }
@@ -62,5 +66,15 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
     @Override
     public void onLoaderReset(android.content.Loader<List<News>> loader) {
         mAdapter = null;
+    }
+
+    @Override
+    public void onItemClick(int p) {
+        News currentNews = mNewses.get(p);
+        Uri newsUri = Uri.parse(currentNews.getUrl());
+        //Create a new intent to view the earthquake URI
+        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
+        System.out.print("Clicked");
+        startActivity(websiteIntent);
     }
 }

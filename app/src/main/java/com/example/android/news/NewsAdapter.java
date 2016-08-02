@@ -3,8 +3,11 @@ package com.example.android.news;
 import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
     private List<News> mNewses;
     private LayoutInflater mInflater;
+
+    private ItemClickCallback mItemClickCallback;
+
+    public interface ItemClickCallback {
+        void onItemClick(int p);
+    }
+
+    public void setItemClickCallback(final ItemClickCallback itemClickCallback){
+        mItemClickCallback = itemClickCallback;
+    }
+
 
     public NewsAdapter(List<News> newses, Context c) {
         mInflater = LayoutInflater.from(c);
@@ -124,7 +138,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         return mNewses.size();
     }
 
-    class NewsHolder extends RecyclerView.ViewHolder{
+    class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private LinearLayout mBackgroundLayout;
         private TextView mSectionTextView;
         private TextView mTitleTextView;
@@ -135,12 +149,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
             super(itemView);
 
             mBackgroundLayout = (LinearLayout)itemView.findViewById(R.id.background_linear);
+            mBackgroundLayout.setOnClickListener(this);
             mSectionTextView = (TextView)itemView.findViewById(R.id.section_list);
             mTitleTextView = (TextView)itemView.findViewById(R.id.title_list);
             mDateTextView = (TextView)itemView.findViewById(R.id.date);
             mAuthorTextView = (TextView)itemView.findViewById(R.id.author);
 
+        }
 
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.background_linear) {
+                mItemClickCallback.onItemClick(getAdapterPosition());
+            }
         }
     }
 }
