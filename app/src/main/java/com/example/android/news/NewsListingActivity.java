@@ -43,24 +43,6 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
         mRecyclerView = (RecyclerView) findViewById(R.id.list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-//        mRecyclerView.setEmptyView(mEmptyTextView);
-
-        //Takes the user to the Guardian website
-//        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                // Find the current earthquake that was clicked on
-//                News currentNews = mAdapter.getItem(position);
-//                // Convert the String URL into a URI object (to pass into the Intent constructor)
-//                Uri newsUri = Uri.parse(currentNews.getUrl());
-//                // Create a new intent to view the earthquake URI
-//                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
-//                // Send the intent to launch a new activity
-//                startActivity(websiteIntent);
-//            }
-//        });
-
     }
     @Override
     public android.content.Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
@@ -69,13 +51,11 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
 
     @Override
     public void onLoadFinished(android.content.Loader<List<News>> loader, List<News> newses) {
-//        mEmptyTextView.setText(R.string.no_result);
         //vibrate when finish loading!!
         mVibrator.vibrate(500);
         if (newses != null && !newses.isEmpty()){
             mAdapter = new NewsAdapter(newses,this);
             mRecyclerView.setAdapter(mAdapter);
-
         }
     }
 

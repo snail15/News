@@ -124,45 +124,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         return mNewses.size();
     }
 
-    //    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        View listItemView = convertView;
-//        if (listItemView == null) {
-//            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.news_list, parent, false);
-//        }
-//
-//        News currentNews = getItem(position);
-//        int backgroundColorID = 0;
-//
-//        if (position % 2 != 0) {
-//            backgroundColorID = R.color.colorAccent;
-//        } else {
-//            backgroundColorID = R.color.normalBackground;
-//        }
-//
-//        LinearLayout backgroundLayout = (LinearLayout) listItemView.findViewById(R.id.background_linear);
-//        backgroundLayout.setBackgroundColor(backgroundColorID);
-//
-//        TextView sectionTextView = (TextView) listItemView.findViewById(R.id.section_list);
-//        sectionTextView.setText(currentNews.getSection());
-//
-//        TextView titleTextView = (TextView) listItemView.findViewById(R.id.title_list);
-//        titleTextView.setText(currentNews.getTitle());
-//
-//        TextView dateTextView = (TextView) listItemView.findViewById(R.id.date);
-//        dateTextView.setText(currentNews.getDate());
-//
-//        TextView authorTextView = (TextView) listItemView.findViewById(R.id.author);
-//        if(currentNews.hasAuthor()){
-//            authorTextView.setText(currentNews.getAuthor());
-//            authorTextView.setVisibility(View.VISIBLE);
-//        }
-//        else{
-//            authorTextView.setVisibility(View.GONE);
-//        }
-//
-//        return listItemView;
-//    }
     class NewsHolder extends RecyclerView.ViewHolder{
         private LinearLayout mBackgroundLayout;
         private TextView mSectionTextView;
