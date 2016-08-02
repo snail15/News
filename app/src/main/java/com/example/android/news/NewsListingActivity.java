@@ -22,7 +22,7 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
     private Vibrator mVibrator;
     private static final int NEWS_LOADER_ID = 1;
     public static final String LOG_TAG = NewsListingActivity.class.getName();
-    public static final String QUERY_URL = "http://content.guardianapis.com/search?q=";
+    public static final String QUERY_URL = "http://content.guardianapis.com/search?show-tags=contributor&q=";
     public static final String API_KEY = "&api-key=test";
     public static String loaderURL;
     @Override
@@ -35,7 +35,6 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
         loaderURL = QUERY_URL+MainActivity.getKeyword()+API_KEY;
 
         android.app.LoaderManager loaderManager = getLoaderManager();
-
         loaderManager.initLoader(NEWS_LOADER_ID, null, this);
 
         ListView listView = (ListView) findViewById(R.id.list);
@@ -49,21 +48,16 @@ public class NewsListingActivity extends AppCompatActivity implements android.ap
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // Find the current earthquake that was clicked on
                 News currentNews = mAdapter.getItem(position);
-
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
                 Uri newsUri = Uri.parse(currentNews.getUrl());
-
                 // Create a new intent to view the earthquake URI
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsUri);
-
                 // Send the intent to launch a new activity
                 startActivity(websiteIntent);
             }
         });
 
-
     }
-
     @Override
     public android.content.Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
         return new NewsLoader(this,loaderURL);

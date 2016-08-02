@@ -44,21 +44,17 @@ public class NewsAdapter extends ArrayAdapter<News> {
             backgroundColorID = R.color.normalBackground;
         }
 
-
         LinearLayout backgroundLayout = (LinearLayout) listItemView.findViewById(R.id.background_linear);
         backgroundLayout.setBackgroundColor(backgroundColorID);
 
         TextView sectionTextView = (TextView) listItemView.findViewById(R.id.section_list);
         sectionTextView.setText(currentNews.getSection());
 
-
         TextView titleTextView = (TextView) listItemView.findViewById(R.id.title_list);
         titleTextView.setText(currentNews.getTitle());
 
-
         TextView dateTextView = (TextView) listItemView.findViewById(R.id.date);
         dateTextView.setText(currentNews.getDate());
-
 
         return listItemView;
     }
